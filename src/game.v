@@ -1,6 +1,7 @@
 module main
 
 import sdl
+import sdl.ttf
 import math
 
 enum TurnState {
@@ -22,6 +23,10 @@ mut:
 	enemy_manager           EnemyManager
 	turn_number             int
 	turn_state              TurnState = .waiting
+	mouse_pos_x int
+	mouse_pos_y int
+	mouse_index_x int
+	mouse_index_y int
 }
 
 fn (mut g Game) loop(delta_time usize) {
@@ -41,15 +46,32 @@ fn (mut g Game) loop(delta_time usize) {
 					g.pos_x += evt.motion.xrel
 					g.pos_y += evt.motion.yrel
 				}
+				g.mouse_pos_x = evt.motion.x
+				g.mouse_pos_y = evt.motion.y
+				if g.mouse_pos_x >= g.pos_x * g.zoom && g.mouse_pos_x < (g.map.max_x * g.zoom) + (g.pos_x * g.zoom) {
+					g.mouse_index_x = int((g.mouse_pos_x - (g.pos_x * g.zoom)) / g.zoom)
+				}
+				if g.mouse_pos_y >= g.pos_y * g.zoom && g.mouse_pos_y < (g.map.max_y * g.zoom) + (g.pos_y * g.zoom) {
+					g.mouse_index_y = int((g.mouse_pos_y - (g.pos_y * g.zoom)) / g.zoom)
+				}
 			}
 			.mousebuttondown {
-				if evt.button.button == sdl.button_right {
-					g.mouse_button_right_down = true
+				match evt.button.button {
+					u8(sdl.button_right) {
+						g.mouse_button_right_down = true
+					}
+					else {}
 				}
 			}
 			.mousebuttonup {
-				if evt.button.button == sdl.button_right {
-					g.mouse_button_right_down = false
+				match evt.button.button {
+					u8(sdl.button_right) {
+						g.mouse_button_right_down = false
+					}
+					u8(sdl.button_left) {
+						println("${g.mouse_index_x} ${g.mouse_index_y}")
+					}
+					else {}
 				}
 			}
 			.keyup {
@@ -102,18 +124,19 @@ fn (mut g Game) loop(delta_time usize) {
 	for p in g.enemy_manager.projectiles {
 		g.draw_square_mini(int(math.round(p.x)), int(math.round(p.y)), p.color)
 	}
+	g.highlight_cursor()
+	g.show_nb_enemies()
+	g.show_nb_turn()
 	sdl.render_present(g.sdl.renderer)
 }
 
 fn (mut g Game) draw_square(x f32, y f32, color sdl.Color) {
-	square_size_x := g.zoom
-	square_size_y := g.zoom
 	sdl.set_render_draw_color(g.sdl.renderer, color.r, color.g, color.b, color.a)
 	rect := sdl.Rect{
-		x: int(math.round((x * square_size_x) + (g.pos_x * square_size_x)))
-		y: int(math.round((y * square_size_y) + (g.pos_y * square_size_y)))
-		w: int(math.round(square_size_x))
-		h: int(math.round(square_size_y))
+		x: int(math.round((x * g.zoom) + (g.pos_x * g.zoom)))
+		y: int(math.round((y * g.zoom) + (g.pos_y * g.zoom)))
+		w: int(math.round(g.zoom))
+		h: int(math.round(g.zoom))
 	}
 	sdl.render_fill_rect(g.sdl.renderer, rect)
 	color_outline := sdl.Color{0, 0, 0, 255}
@@ -123,18 +146,65 @@ fn (mut g Game) draw_square(x f32, y f32, color sdl.Color) {
 }
 
 fn (mut g Game) draw_square_mini(x f32, y f32, color sdl.Color) {
-	square_size_x := g.zoom
-	square_size_y := g.zoom
 	sdl.set_render_draw_color(g.sdl.renderer, color.r, color.g, color.b, color.a)
 	rect := sdl.Rect{
-		x: int(math.round((x * square_size_x) + (g.pos_x * square_size_x) + (square_size_x / 4)))
-		y: int(math.round((y * square_size_y) + (g.pos_y * square_size_y) + (square_size_y / 4)))
-		w: int(math.round(square_size_x / 2))
-		h: int(math.round(square_size_y / 2))
+		x: int(math.round((x * g.zoom) + (g.pos_x * g.zoom) + (g.zoom / 4)))
+		y: int(math.round((y * g.zoom) + (g.pos_y * g.zoom) + (g.zoom / 4)))
+		w: int(math.round(g.zoom / 2))
+		h: int(math.round(g.zoom / 2))
 	}
 	sdl.render_fill_rect(g.sdl.renderer, rect)
 	color_outline := sdl.Color{0, 0, 0, 255}
 	sdl.set_render_draw_color(g.sdl.renderer, color_outline.r, color_outline.g, color_outline.b,
 		color_outline.a)
 	sdl.render_draw_rect(g.sdl.renderer, rect)
+}
+
+fn (mut g Game) show_nb_enemies() {
+	// text
+	col := sdl.Color{0, 0, 0, 255}
+	surf := ttf.render_text_solid(g.sdl.font, "Enemies: ${g.enemy_manager.enemies.len}".str, col)
+	text := sdl.create_texture_from_surface(g.sdl.renderer, surf)
+	mut texw := 0
+	mut texh := 0
+	sdl.query_texture(text, sdl.null, sdl.null, &texw, &texh)
+	rect := sdl.Rect{10, 10, texw, texh}
+	// draw rect
+	col_rect := sdl.Color{255, 255, 255, 50}
+	sdl.set_render_draw_color(g.sdl.renderer, col_rect.r, col_rect.g, col_rect.b,
+		col_rect.a)
+	sdl.render_fill_rect(g.sdl.renderer, rect)
+	// draw text
+	sdl.render_copy(g.sdl.renderer, text, sdl.null, rect)
+	sdl.destroy_texture(text)
+	sdl.free_surface(surf)
+}
+
+fn (mut g Game) show_nb_turn() {
+	// text
+	col := sdl.Color{0, 0, 0, 255}
+	surf := ttf.render_text_solid(g.sdl.font, "Turn: ${g.turn_number}".str, col)
+	text := sdl.create_texture_from_surface(g.sdl.renderer, surf)
+	mut texw := 0
+	mut texh := 0
+	sdl.query_texture(text, sdl.null, sdl.null, &texw, &texh)
+	rect := sdl.Rect{10, 25, texw, texh}
+	// draw rect
+	col_rect := sdl.Color{255, 255, 255, 50}
+	sdl.set_render_draw_color(g.sdl.renderer, col_rect.r, col_rect.g, col_rect.b,
+		col_rect.a)
+	sdl.render_fill_rect(g.sdl.renderer, rect)
+	// draw text
+	sdl.render_copy(g.sdl.renderer, text, sdl.null, rect)
+	sdl.destroy_texture(text)
+	sdl.free_surface(surf)
+}
+
+fn (mut g Game) highlight_cursor() {
+	color := sdl.Color{10, 10, 0, 255}
+	g.draw_square(g.mouse_index_x, g.mouse_index_y, color)
+}
+
+fn (mut g Game) close() {
+	g.sdl.close()
 }

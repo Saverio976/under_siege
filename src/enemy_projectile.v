@@ -3,6 +3,7 @@ module main
 import sdl
 import datatypes
 
+@[heap]
 struct EnemyProjectile {
 	color sdl.Color = sdl.Color{255, 255, 255, 50}
 mut:
@@ -10,6 +11,7 @@ mut:
 	y            int
 	q            datatypes.Queue[PosTmp]
 	elapsed_time usize
+	has_arived bool
 }
 
 fn EnemyProjectile.new(x int, y int, map_repr [][]int) EnemyProjectile {
@@ -44,6 +46,7 @@ fn EnemyProjectile.new(x int, y int, map_repr [][]int) EnemyProjectile {
 
 fn (mut p EnemyProjectile) move(delta_time usize) bool {
 	if p.q.len() == 0 {
+		p.has_arived = true
 		return true
 	}
 	p.elapsed_time += delta_time

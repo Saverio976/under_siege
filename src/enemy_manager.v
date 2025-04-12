@@ -27,6 +27,8 @@ fn (mut m EnemyManager) init(map_max_x int, map_max_y int) {
 	m.map_max_x = map_max_x
 	m.map_max_y = map_max_y
 	m.map_repr = [][]int{len: m.map_max_y, cap: m.map_max_y, init: []int{len: m.map_max_x, cap: m.map_max_x, init: math.maxof[int]()}}
+	m.projectiles = []EnemyProjectile{cap: 1000}
+	m.enemies = []Enemy{cap: 1000}
 }
 
 fn (mut m EnemyManager) move(status TurnState) bool {
