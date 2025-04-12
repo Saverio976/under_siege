@@ -13,13 +13,13 @@ mut:
 
 struct EnemyManager {
 mut:
-	map_max_x int
-	map_max_y int
-	enemies   []Enemy
-	map_repr  [][]int
+	map_max_x   int
+	map_max_y   int
+	enemies     []Enemy
+	map_repr    [][]int
 	projectiles []EnemyProjectile
-	index int
-	index_proj int
+	index       int
+	index_proj  int
 	last_status TurnState = .waiting
 }
 
@@ -80,18 +80,19 @@ fn (mut m EnemyManager) attack(status TurnState, delta_time usize) bool {
 	if m.index_proj >= m.projectiles.len {
 		m.index_proj = 0
 	}
-	mut to_remove := -1
 	countor := m.index_proj + 50
 	for m.index_proj < math.min(countor, m.projectiles.len) {
-		if m.projectiles[m.index_proj].move(delta_time) {
-			to_remove = m.index_proj
-			break
+		mut to_remove := -1
+		for m.index_proj < math.min(countor, m.projectiles.len) {
+			if m.projectiles[m.index_proj].move(delta_time) {
+				to_remove = m.index_proj
+				break
+			}
+			m.index_proj += 1
 		}
-		m.index_proj += 1
-	}
-	if to_remove != -1 {
-		m.projectiles.delete(to_remove)
-		println("deleted")
+		if to_remove != -1 {
+			m.projectiles.delete(to_remove)
+		}
 	}
 	return m.index >= m.enemies.len && m.projectiles.len == 0
 }

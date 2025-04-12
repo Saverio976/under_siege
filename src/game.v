@@ -3,7 +3,7 @@ module main
 import sdl
 import math
 
-enum TurnState{
+enum TurnState {
 	start_next
 	new_turn
 	updating
@@ -14,14 +14,14 @@ struct Game {
 mut:
 	sdl                     SdlContext
 	should_close            bool
-	zoom                    int = 30
-	pos_x                   int
-	pos_y                   int
+	zoom                    f32 = 30
+	pos_x                   f32
+	pos_y                   f32
 	mouse_button_right_down bool
 	map                     Map
 	enemy_manager           EnemyManager
 	turn_number             int
-	turn_state TurnState = .waiting
+	turn_state              TurnState = .waiting
 }
 
 fn (mut g Game) loop(delta_time usize) {
@@ -105,15 +105,15 @@ fn (mut g Game) loop(delta_time usize) {
 	sdl.render_present(g.sdl.renderer)
 }
 
-fn (mut g Game) draw_square(x int, y int, color sdl.Color) {
+fn (mut g Game) draw_square(x f32, y f32, color sdl.Color) {
 	square_size_x := g.zoom
 	square_size_y := g.zoom
 	sdl.set_render_draw_color(g.sdl.renderer, color.r, color.g, color.b, color.a)
 	rect := sdl.Rect{
-		x: (x * square_size_x) + (g.pos_x * square_size_x)
-		y: (y * square_size_y) + (g.pos_y * square_size_y)
-		w: square_size_x
-		h: square_size_y
+		x: int(math.round((x * square_size_x) + (g.pos_x * square_size_x)))
+		y: int(math.round((y * square_size_y) + (g.pos_y * square_size_y)))
+		w: int(math.round(square_size_x))
+		h: int(math.round(square_size_y))
 	}
 	sdl.render_fill_rect(g.sdl.renderer, rect)
 	color_outline := sdl.Color{0, 0, 0, 255}
@@ -122,15 +122,15 @@ fn (mut g Game) draw_square(x int, y int, color sdl.Color) {
 	sdl.render_draw_rect(g.sdl.renderer, rect)
 }
 
-fn (mut g Game) draw_square_mini(x int, y int, color sdl.Color) {
+fn (mut g Game) draw_square_mini(x f32, y f32, color sdl.Color) {
 	square_size_x := g.zoom
 	square_size_y := g.zoom
 	sdl.set_render_draw_color(g.sdl.renderer, color.r, color.g, color.b, color.a)
 	rect := sdl.Rect{
-		x: (x * square_size_x) + (g.pos_x * square_size_x) + (square_size_x / 4)
-		y: (y * square_size_y) + (g.pos_y * square_size_y) + (square_size_y / 4)
-		w: square_size_x / 2
-		h: square_size_y / 2
+		x: int(math.round((x * square_size_x) + (g.pos_x * square_size_x) + (square_size_x / 4)))
+		y: int(math.round((y * square_size_y) + (g.pos_y * square_size_y) + (square_size_y / 4)))
+		w: int(math.round(square_size_x / 2))
+		h: int(math.round(square_size_y / 2))
 	}
 	sdl.render_fill_rect(g.sdl.renderer, rect)
 	color_outline := sdl.Color{0, 0, 0, 255}
