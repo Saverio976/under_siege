@@ -11,6 +11,7 @@ fn main() {
 	game.sdl.init()
 	game.map.init()
 	game.enemy_manager.init(game.map.max_x, game.map.max_y)
+	game.opt.init()
 	mut now := sdl.get_performance_counter()
 	mut last := now
 	mut delta_time := usize(0)

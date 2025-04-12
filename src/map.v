@@ -18,3 +18,11 @@ fn (mut m Map) init() {
 	}
 	m.tiles[m.max_y / 2][m.max_x / 2] = TileTownHall{}
 }
+
+fn (mut m Map) put_tile(x int, y int, @type TileType) {
+	if x < 0 || y < 0 || x >= m.max_x || y >= m.max_y {
+		return
+	}
+	m.tiles[y][x] = Tile.new(@type)
+	println('building')
+}

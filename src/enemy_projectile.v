@@ -11,7 +11,7 @@ mut:
 	y            int
 	q            datatypes.Queue[PosTmp]
 	elapsed_time usize
-	has_arived bool
+	has_arived   bool
 }
 
 fn EnemyProjectile.new(x int, y int, map_repr [][]int) EnemyProjectile {

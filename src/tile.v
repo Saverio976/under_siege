@@ -21,3 +21,13 @@ fn Tile.new_random() &Tile {
 		return TileEmpty{}
 	}
 }
+
+fn Tile.new(@type TileType) Tile {
+	if @type == .empty {
+		return TileEmpty{}
+	} else if @type == .town_hall {
+		return TileTownHall{}
+	} else {
+		return TileEmpty{}
+	}
+}
