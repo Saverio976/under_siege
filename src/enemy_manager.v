@@ -165,25 +165,37 @@ fn (mut m EnemyManager) calculate_patfinding(mmap &Map) {
 	}
 	for q.len() != 0 {
 		pos := q.pop() or { break }
-		if pos.x > 0 && m.map_repr[pos.y][pos.x - 1] > pos.v + 1 {
+		if pos.x > 0 {
 			// Left
-			q.push(PosTmp{pos.x - 1, pos.y, pos.v + 1})
-			m.map_repr[pos.y][pos.x - 1] = pos.v + 1
+			val := m.map_repr[pos.y][pos.x - 1]
+			if val > pos.v + 1 || (val == pos.v + 1 && rand.int_in_range(0, 2) or { 0 } == 1) {
+				q.push(PosTmp{pos.x - 1, pos.y, pos.v + 1})
+				m.map_repr[pos.y][pos.x - 1] = pos.v + 1
+			}
 		}
-		if pos.y > 0 && m.map_repr[pos.y - 1][pos.x] > pos.v + 1 {
+		if pos.y > 0 {
 			// Top
-			q.push(PosTmp{pos.x, pos.y - 1, pos.v + 1})
-			m.map_repr[pos.y - 1][pos.x] = pos.v + 1
+			val := m.map_repr[pos.y - 1][pos.x]
+			if val > pos.v + 1 || (val == pos.v + 1 && rand.int_in_range(0, 2) or { 0 } == 1) {
+				q.push(PosTmp{pos.x, pos.y - 1, pos.v + 1})
+				m.map_repr[pos.y - 1][pos.x] = pos.v + 1
+			}
 		}
-		if pos.x < m.map_max_x - 1 && m.map_repr[pos.y][pos.x + 1] > pos.v + 1 {
+		if pos.x < m.map_max_x - 1 {
 			// Right
-			q.push(PosTmp{pos.x + 1, pos.y, pos.v + 1})
-			m.map_repr[pos.y][pos.x + 1] = pos.v + 1
+			val := m.map_repr[pos.y][pos.x + 1]
+			if val > pos.v + 1 || (val == pos.v + 1 && rand.int_in_range(0, 2) or { 0 } == 1) {
+				q.push(PosTmp{pos.x + 1, pos.y, pos.v + 1})
+				m.map_repr[pos.y][pos.x + 1] = pos.v + 1
+			}
 		}
-		if pos.y < m.map_max_y - 1 && m.map_repr[pos.y + 1][pos.x] > pos.v + 1 {
+		if pos.y < m.map_max_y - 1 {
 			// Bot
-			q.push(PosTmp{pos.x, pos.y + 1, pos.v + 1})
-			m.map_repr[pos.y + 1][pos.x] = pos.v + 1
+			val := m.map_repr[pos.y + 1][pos.x]
+			if val > pos.v + 1 || (val == pos.v + 1 && rand.int_in_range(0, 2) or { 0 } == 1) {
+				q.push(PosTmp{pos.x, pos.y + 1, pos.v + 1})
+				m.map_repr[pos.y + 1][pos.x] = pos.v + 1
+			}
 		}
 	}
 }
