@@ -1,10 +1,13 @@
 module main
 
+import math
+
 struct Map {
 mut:
 	max_x int
 	max_y int
 	tiles [][]Tile
+	y_idx int
 }
 
 fn (mut m Map) init() {
@@ -24,5 +27,31 @@ fn (mut m Map) put_tile(x int, y int, @type TileType) {
 		return
 	}
 	m.tiles[y][x] = Tile.new(@type)
-	println('building')
+}
+
+fn (mut m Map) reset_turn() {
+	m.y_idx = 0
+}
+
+fn (mut m Map) new_turn(mut g Game) bool {
+	for y in m.y_idx .. math.min(m.y_idx + 10, m.tiles.len) {
+		for x, mut tile in m.tiles[y] {
+			tile.new_turn(mut g, x, y)
+		}
+		m.y_idx += 1
+	}
+	return m.y_idx >= m.tiles.len
+}
+
+fn (mut m Map) update(mut g Game, delta_time usize) bool {
+	mut finished := true
+	for mut row in m.tiles {
+		for mut tile in row {
+			if !tile.has_finished_update() {
+				finished = false
+				tile.update(mut g, delta_time)
+			}
+		}
+	}
+	return finished
 }

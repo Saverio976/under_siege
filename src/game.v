@@ -104,15 +104,16 @@ fn (mut g Game) loop(delta_time usize) {
 				g.enemy_manager.spawn_enemies(g.turn_number)
 			}
 			g.enemy_manager.calculate_patfinding(g.map)
+			g.map.reset_turn()
 			g.turn_state = .new_turn
 		}
 		.new_turn {
-			if g.enemy_manager.move(g.turn_state) {
+			if g.enemy_manager.move(g.turn_state) && g.map.new_turn(mut g) {
 				g.turn_state = .updating
 			}
 		}
 		.updating {
-			if g.enemy_manager.attack(g.turn_state, delta_time) {
+			if g.enemy_manager.attack(g.turn_state, delta_time) && g.map.update(mut g, delta_time) {
 				g.turn_state = .waiting
 			}
 		}
@@ -124,6 +125,11 @@ fn (mut g Game) loop(delta_time usize) {
 	for y, row in g.map.tiles {
 		for x, tile in row {
 			g.draw_square(x, y, tile.color)
+			if tile is TileArcher {
+				if tile.proj != none {
+					g.draw_square_mini(tile.proj.x, tile.proj.y, tile.proj.color)
+				}
+			}
 		}
 	}
 	for e in g.enemy_manager.enemies {

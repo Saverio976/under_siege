@@ -199,3 +199,22 @@ fn (mut m EnemyManager) calculate_patfinding(mmap &Map) {
 		}
 	}
 }
+
+fn (mut m EnemyManager) take_dmg(x int, y int, dmg int) {
+	mut index := 0
+	for index < m.enemies.len {
+		mut to_remove := -1
+		for _ in index .. m.enemies.len {
+			mut e := &m.enemies[index]
+			e.hp -= dmg
+			if e.hp <= 0 {
+				to_remove = index
+				break
+			}
+			index += 1
+		}
+		if to_remove != -1 {
+			m.enemies.delete(to_remove)
+		}
+	}
+}

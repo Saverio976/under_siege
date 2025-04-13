@@ -6,11 +6,16 @@ import sdl
 enum TileType {
 	empty
 	town_hall
+	archer
 }
 
 interface Tile {
 	@type TileType
 	color sdl.Color
+mut:
+	new_turn(mut g Game, x int, y int)
+	update(mut g Game, delta_time usize)
+	has_finished_update() bool
 }
 
 fn Tile.new_random() &Tile {
@@ -27,6 +32,8 @@ fn Tile.new(@type TileType) Tile {
 		return TileEmpty{}
 	} else if @type == .town_hall {
 		return TileTownHall{}
+	} else if @type == .archer {
+		return TileArcher{}
 	} else {
 		return TileEmpty{}
 	}

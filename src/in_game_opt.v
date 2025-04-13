@@ -29,6 +29,11 @@ fn (mut b BuildingsGUI) init() {
 		@type: .town_hall
 		rect:  sdl.Rect{30, 10, 15, 15}
 	}
+	b.buildings << BuildingGUI{
+		color: tile_archer_color
+		@type: .archer
+		rect:  sdl.Rect{50, 10, 15, 15}
+	}
 }
 
 fn (mut b BuildingsGUI) update(mut g Game) {

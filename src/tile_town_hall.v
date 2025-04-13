@@ -8,3 +8,13 @@ struct TileTownHall implements Tile {
 	@type TileType  = .town_hall
 	color sdl.Color = tile_town_hall_color
 }
+
+fn (mut t TileTownHall) new_turn(mut g Game, x int, y int) {
+}
+
+fn (mut t TileTownHall) update(mut g Game, delta_time usize) {
+}
+
+fn (mut t TileTownHall) has_finished_update() bool {
+	return true
+}
