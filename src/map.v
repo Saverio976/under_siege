@@ -55,3 +55,12 @@ fn (mut m Map) update(mut g Game, delta_time usize) bool {
 	}
 	return finished
 }
+
+fn (mut m Map) take_dmg(x int, y int, dmg int) {
+	if m.tiles[y][x].enemy_focusable == true {
+		m.tiles[y][x].hp -= dmg
+		if m.tiles[y][x].hp <= 0 {
+			m.tiles[y][x] = Tile.new(.empty)
+		}
+	}
+}

@@ -8,6 +8,7 @@ enum TileType {
 	town_hall
 	archer
 	forest
+	road
 }
 
 interface Tile {
@@ -15,6 +16,7 @@ interface Tile {
 	color sdl.Color
 	enemy_focusable bool
 mut:
+	hp int
 	new_turn(mut g Game, x int, y int)
 	update(mut g Game, delta_time usize)
 	has_finished_update() bool
@@ -40,6 +42,8 @@ fn Tile.new(@type TileType) Tile {
 		return TileArcher{}
 	} else if @type == .forest {
 		return TileForest{}
+	} else if @type == .road {
+		return TileRoad{}
 	} else {
 		return TileEmpty{}
 	}

@@ -113,7 +113,7 @@ fn (mut g Game) loop(delta_time usize) {
 			}
 		}
 		.updating {
-			if g.enemy_manager.attack(g.turn_state, delta_time) && g.map.update(mut g, delta_time) {
+			if g.enemy_manager.attack(mut g, g.turn_state, delta_time) && g.map.update(mut g, delta_time) {
 				g.turn_state = .waiting
 			}
 		}

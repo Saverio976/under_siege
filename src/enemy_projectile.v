@@ -7,6 +7,7 @@ import datatypes
 struct EnemyProjectile {
 	color sdl.Color = sdl.Color{255, 255, 255, 50}
 mut:
+	dmg int
 	x            int
 	y            int
 	q            datatypes.Queue[PosTmp]
@@ -14,7 +15,7 @@ mut:
 	has_arived   bool
 }
 
-fn EnemyProjectile.new(x int, y int, map_repr [][]int) EnemyProjectile {
+fn EnemyProjectile.new(x int, y int, dmg int, map_repr [][]int) EnemyProjectile {
 	map_max_x := map_repr[0].len
 	map_max_y := map_repr.len
 	// Left, Top, Right, Bot, Same Position
@@ -38,6 +39,7 @@ fn EnemyProjectile.new(x int, y int, map_repr [][]int) EnemyProjectile {
 		pseudo_pos.y += choices[index_pos].y
 	}
 	return EnemyProjectile{
+		dmg: dmg
 		x: x
 		y: y
 		q: q

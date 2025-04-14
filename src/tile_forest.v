@@ -8,6 +8,8 @@ struct TileForest implements Tile {
 	@type TileType  = .forest
 	color sdl.Color = tile_forest_color
 	enemy_focusable bool
+mut:
+	hp int
 }
 
 fn (mut t TileForest) new_turn(mut g Game, x int, y int) {

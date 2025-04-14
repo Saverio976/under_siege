@@ -64,7 +64,7 @@ fn (mut m EnemyManager) move(status TurnState) bool {
 	return m.index >= m.enemies.len
 }
 
-fn (mut m EnemyManager) attack(status TurnState, delta_time usize) bool {
+fn (mut m EnemyManager) attack(mut g Game, status TurnState, delta_time usize) bool {
 	if status != m.last_status {
 		m.index = 0
 		m.index_proj = 0
@@ -76,7 +76,7 @@ fn (mut m EnemyManager) attack(status TurnState, delta_time usize) bool {
 			m.index += 1
 			continue
 		}
-		m.projectiles << EnemyProjectile.new(e.x, e.y, m.map_repr)
+		m.projectiles << EnemyProjectile.new(e.x, e.y, e.dmg, m.map_repr)
 		m.index += 1
 	}
 	if m.index_proj >= m.projectiles.len {
@@ -88,6 +88,7 @@ fn (mut m EnemyManager) attack(status TurnState, delta_time usize) bool {
 		for m.index_proj < math.min(countor, m.projectiles.len) {
 			if m.projectiles[m.index_proj].move(delta_time) {
 				to_remove = m.index_proj
+				g.map.take_dmg(m.projectiles[m.index_proj].x, m.projectiles[m.index_proj].y, m.projectiles[m.index_proj].dmg)
 				break
 			}
 			m.index_proj += 1

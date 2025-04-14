@@ -8,6 +8,8 @@ struct TileEmpty implements Tile {
 	@type TileType  = .empty
 	color sdl.Color = tile_empty_color
 	enemy_focusable bool
+mut:
+	hp int
 }
 
 fn (mut t TileEmpty) new_turn(mut g Game, x int, y int) {

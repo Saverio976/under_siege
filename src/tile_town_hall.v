@@ -8,6 +8,8 @@ struct TileTownHall implements Tile {
 	@type TileType  = .town_hall
 	color sdl.Color = tile_town_hall_color
 	enemy_focusable bool = true
+mut:
+	hp int = 10
 }
 
 fn (mut t TileTownHall) new_turn(mut g Game, x int, y int) {
