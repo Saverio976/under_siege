@@ -48,6 +48,7 @@ fn (mut p ArcherProjectile) move(delta_time usize) bool {
 struct TileArcher implements Tile {
 	@type TileType  = .archer
 	color sdl.Color = tile_archer_color
+	enemy_focusable bool = true
 mut:
 	range int = 3
 	dmg   int = 2
@@ -56,8 +57,9 @@ mut:
 
 fn (mut t TileArcher) new_turn(mut g Game, x int, y int) {
 	for e in g.enemy_manager.enemies {
-		if vec.Vec2{x, y}.distance(vec.Vec2{e.x, e.y}) < t.range {
+		if vec.Vec2{x, y}.distance(vec.Vec2{e.x, e.y}) <= t.range {
 			t.proj = ArcherProjectile.new(x, y, e.x, e.y, t.dmg)
+			println("shoot")
 			break
 		}
 	}

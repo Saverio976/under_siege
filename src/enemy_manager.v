@@ -157,7 +157,7 @@ fn (mut m EnemyManager) calculate_patfinding(mmap &Map) {
 	mut q := datatypes.Queue[PosTmp]{}
 	for y, row in mmap.tiles {
 		for x, tile in row {
-			if tile.@type != .empty {
+			if tile.enemy_focusable {
 				q.push(PosTmp{x, y, 0})
 				m.map_repr[y][x] = 0
 			}
@@ -206,10 +206,12 @@ fn (mut m EnemyManager) take_dmg(x int, y int, dmg int) {
 		mut to_remove := -1
 		for _ in index .. m.enemies.len {
 			mut e := &m.enemies[index]
-			e.hp -= dmg
-			if e.hp <= 0 {
-				to_remove = index
-				break
+			if e.x == x && e.y == y {
+				e.hp -= dmg
+				if e.hp <= 0 {
+					to_remove = index
+					break
+				}
 			}
 			index += 1
 		}
