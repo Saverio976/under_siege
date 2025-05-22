@@ -7,7 +7,7 @@ import datatypes
 struct EnemyProjectile {
 	color sdl.Color = sdl.Color{255, 255, 255, 50}
 mut:
-	dmg int
+	dmg          int
 	x            int
 	y            int
 	q            datatypes.Queue[PosTmp]
@@ -40,9 +40,9 @@ fn EnemyProjectile.new(x int, y int, dmg int, map_repr [][]int) EnemyProjectile 
 	}
 	return EnemyProjectile{
 		dmg: dmg
-		x: x
-		y: y
-		q: q
+		x:   x
+		y:   y
+		q:   q
 	}
 }
 

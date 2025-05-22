@@ -29,6 +29,21 @@ fn (mut m Map) put_tile(x int, y int, @type TileType) {
 	m.tiles[y][x] = Tile.new(@type)
 }
 
+fn (mut m Map) upgrade_tile(x int, y int) {
+	if x < 0 || y < 0 || x >= m.max_x || y >= m.max_y {
+		return
+	}
+	// TODO: do something
+	// m.tiles[y][x]
+}
+
+fn (mut m Map) delete_tile(x int, y int) {
+	if x < 0 || y < 0 || x >= m.max_x || y >= m.max_y {
+		return
+	}
+	m.tiles[y][x] = Tile.new(.empty)
+}
+
 fn (mut m Map) reset_turn() {
 	m.y_idx = 0
 }

@@ -5,8 +5,8 @@ import sdl
 const tile_forest_color = sdl.Color{100, 255, 100, 255}
 
 struct TileForest implements Tile {
-	@type TileType  = .forest
-	color sdl.Color = tile_forest_color
+	@type           TileType  = .forest
+	color           sdl.Color = tile_forest_color
 	enemy_focusable bool
 mut:
 	hp int

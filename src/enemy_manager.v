@@ -88,7 +88,8 @@ fn (mut m EnemyManager) attack(mut g Game, status TurnState, delta_time usize) b
 		for m.index_proj < math.min(countor, m.projectiles.len) {
 			if m.projectiles[m.index_proj].move(delta_time) {
 				to_remove = m.index_proj
-				g.map.take_dmg(m.projectiles[m.index_proj].x, m.projectiles[m.index_proj].y, m.projectiles[m.index_proj].dmg)
+				g.map.take_dmg(m.projectiles[m.index_proj].x, m.projectiles[m.index_proj].y,
+					m.projectiles[m.index_proj].dmg)
 				break
 			}
 			m.index_proj += 1

@@ -12,8 +12,8 @@ enum TileType {
 }
 
 interface Tile {
-	@type TileType
-	color sdl.Color
+	@type           TileType
+	color           sdl.Color
 	enemy_focusable bool
 mut:
 	hp int

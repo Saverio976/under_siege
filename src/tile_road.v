@@ -5,9 +5,9 @@ import sdl
 const tile_road_color = sdl.Color{100, 200, 255, 255}
 
 struct TileRoad implements Tile {
-	@type TileType = .road
-	color sdl.Color = tile_road_color
-	enemy_focusable bool = true
+	@type           TileType  = .road
+	color           sdl.Color = tile_road_color
+	enemy_focusable bool      = true
 mut:
 	hp int = 5
 }

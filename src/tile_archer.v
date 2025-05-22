@@ -46,11 +46,11 @@ fn (mut p ArcherProjectile) move(delta_time usize) bool {
 }
 
 struct TileArcher implements Tile {
-	@type TileType  = .archer
-	color sdl.Color = tile_archer_color
-	enemy_focusable bool = true
+	@type           TileType  = .archer
+	color           sdl.Color = tile_archer_color
+	enemy_focusable bool      = true
 mut:
-	hp int = 10
+	hp    int = 10
 	range int = 3
 	dmg   int = 2
 	proj  ?ArcherProjectile
